@@ -1,0 +1,22 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: MongoDB adds repos for Ubuntu Trusty
+      apt_repository: repo="deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse" state=present
+      when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"  
+      become: true 
+
+    - name: MongoDB adds keyserver
+      apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=0C49F3730359A14518585931BC711F9BA15703C6
+      become: true
+
+    - name: MongoDB updates cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: MongoDB installs MongoDB
+      apt:
+        name: mongodb-org
+        state: present
+      become: true
